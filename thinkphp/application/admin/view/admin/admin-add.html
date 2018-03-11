@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+{include file='public/meta'}
+<title>添加管理员 - 管理员管理 - H-ui.admin v3.1</title>
+<meta name="keywords" content="H-ui.admin v3.1,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
+<meta name="description" content="H-ui.admin v3.1，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+</head>
+<body>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-admin-add" method="post">
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>管理员名称：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" value="" placeholder="" id="adminName" name="adminName">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>新密码：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="password" class="input-text" autocomplete="off" value="" placeholder="密码" id="password" name="password">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>确认密码：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="password" class="input-text" autocomplete="off"  placeholder="确认新密码" id="password2" name="password2">
+		</div>
+	</div>
+	
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>邮箱：</label>
+		<div class="formControls col-xs-8 col-sm-9">
+			<input type="text" class="input-text" placeholder="@" name="email" id="email">
+		</div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">角色：</label>
+		<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+			<select class="select" name="adminRole" size="1">
+				<option value="0" selected>管理员</option>
+                <option value="1" >超级管理员</option>
+			</select>
+			</span> </div>
+	</div>
+	<div class="row cl">
+		<label class="form-label col-xs-4 col-sm-3">状态：</label>
+		<div class="formControls col-xs-8 col-sm-9"> <span class="select-box" style="width:150px;">
+			<select class="select" name="adminStatus" size="1">
+				<option value="0" selected>禁用</option>
+                <option value="1" >启用</option>
+			</select>
+			</span> </div>
+	</div>
+	<div class="row cl">
+		<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3" style="margin-top:30px">
+			<input class="btn btn-primary radius disabled" type="button" value="&nbsp;&nbsp;提交&nbsp;&nbsp;" id="submit" >
+		</div>
+	</div>
+	</form>
+</article>
+
+{include file='public/footer'}
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/jquery.validate.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/validate-methods.js"></script> 
+<script type="text/javascript" src="__STATIC__/lib/jquery.validation/1.14.0/messages_zh.js"></script> 
+<script type="text/javascript">
+$(function(){
+	$("#form-admin-add").validate({
+		rules:{
+			adminName:{
+				required:true,
+				minlength:4,
+				maxlength:12
+			},
+			password:{
+				required:true,
+				minlength:6,
+				maxlength:12
+			},
+			password2:{
+				required:true,
+				equalTo: "#password"
+			},
+			adminRole:{
+				required:true,
+			},
+			email:{
+				required:true,
+				email:true,
+			},
+		},
+
+	});
+});
+</script>
+<script type="text/javascript">
+
+$(function(){
+
+    //防止用户无更新提交,只有表中数据有变化时才允许提交
+    $("form").children().change(function(){
+        $("#submit").removeClass('disabled');
+    });
+
+
+
+    $("#submit").on("click", function(event){
+        $.ajax({
+            type: "POST",
+            url: "{:url('admin/addUser')}",
+            data: $("form").serialize(),
+            dataType: "json",
+            success: function(data){
+                if (data.status == 1) {
+                	layer.msg(data.message,{icon: 6,time:1000});
+                	setTimeout('parent.location.reload()',10);
+
+                } else {
+                	layer.msg(data.message,{icon: 5,time:1000}); 
+                }
+            }
+        });
+
+    })
+})
+</script>
+
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>
